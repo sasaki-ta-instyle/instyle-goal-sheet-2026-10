@@ -139,7 +139,23 @@ export default function PersonalGoalForm({ data, onChange }: Props) {
         </table>
       </div>
 
-      <p style={{ fontSize: '.8125rem', fontWeight: 600, marginBottom: 6 }}>④ SL理論（Situational Leadership）</p>
+      <p style={{ fontSize: '.8125rem', fontWeight: 600, marginBottom: 6, display: 'flex', alignItems: 'baseline', gap: 12 }}>
+        <span>④ SL理論</span>
+        <a
+          href="https://www.dodadsj.com/content/20230224_sl-theory/"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            fontSize: '.6875rem',
+            fontWeight: 400,
+            color: 'var(--color-text-muted)',
+            textDecoration: 'underline',
+            textUnderlineOffset: 2,
+          }}
+        >
+          SL理論とは ↗
+        </a>
+      </p>
       <p style={{ fontSize: '.75rem', color: 'var(--color-text-muted)', marginBottom: 12 }}>
         今期の自分が S1〜S4 のどこに属するかを<strong>上長と握って</strong>選択してください。期中の関わり方（指示／支援の量）の認識を揃えるためのものです。
       </p>
