@@ -1,0 +1,241 @@
+export type Grade = 'I' | "N'" | 'N' | "n'" | 'n' | "S'" | 'S' | "s'" | 's' | "T'" | 'T' | "t'" | 't' | "Y'" | 'Y' | "y'" | 'y' | "L'" | 'L' | "l'" | 'l' | "E'" | 'E' | "e'" | 'e';
+
+export interface CoverData {
+  company: string;
+  name: string;
+  grade: Grade | '';
+  period: string;
+}
+
+export interface KpiNumRow {
+  prev: string;
+  target: string;
+  actual: string;
+  nextTarget: string;
+}
+
+export interface CompanyGoalData {
+  revenue: KpiNumRow;
+  operatingProfit: KpiNumRow;
+  operatingMargin: KpiNumRow;
+  grossProfit: KpiNumRow;
+  strategicFocus: string;
+}
+
+export interface DeptActionRow {
+  content: string;
+  expectedEffect: string;
+  deadline: string;
+}
+
+export interface DeptKpiNumRow {
+  label: string;
+  prev: string;
+  target: string;
+  actual: string;
+  nextTarget: string;
+}
+
+export interface DeptKgiRow {
+  mission: string;
+  kgi: string;
+}
+
+export interface DeptGoalData {
+  strategicFocusRef: string;
+  mission: string;
+  kgi1: DeptKgiRow;
+  kgi2: DeptKgiRow;
+  kpi1: DeptKpiNumRow;
+  kpi2: DeptKpiNumRow;
+  kpi3: DeptKpiNumRow;
+  kpi4: DeptKpiNumRow;
+  kpi5: DeptKpiNumRow;
+  actions: DeptActionRow[];
+}
+
+export interface CurrentStatusRow {
+  label: string;
+  value: string;
+}
+
+export interface SmartGoalRow {
+  goal: string;
+  targetValue: string;
+  deadline: string;
+  note: string;
+}
+
+export interface KpiContribRow {
+  deptKpi: string;
+  myPart: string;
+}
+
+export interface PersonalGoalData {
+  currentStatus: CurrentStatusRow[];
+  smartGoals: SmartGoalRow[];
+  kpiContribs: KpiContribRow[];
+}
+
+export interface PromotionData {
+  valueScore: string;
+  tenurePoint: number;
+  deptGrowthPoint: number;
+  personalKpiPoint: number;
+  supervisorPoint: number;
+  mgmtPoint: number;
+  nurturingPoint: number;
+}
+
+export interface BonusData {
+  canAfford: number;
+  hasProfit: number;
+  futureProfit: number;
+  deptKpiAchieved: number;
+  personalKpiAchieved: number;
+  supervisorEval: number;
+  noSupervisor: boolean;
+  valueEval: number;
+  reproducibility: number;
+  roleAchievement: number;
+  difficulty: number;
+  mgmtEval: number;
+}
+
+export type GradeExpectations = Partial<Record<string, string>>;
+
+export interface FormData {
+  cover: CoverData;
+  company: CompanyGoalData;
+  dept: DeptGoalData;
+  personal: PersonalGoalData;
+  promotion: PromotionData;
+  bonus: BonusData;
+  gradeExpectations: GradeExpectations;
+}
+
+export interface GradeEntry {
+  key: Grade;
+  salary: string;
+}
+
+export interface GradeTier {
+  tier: string;
+  tierName: string;
+  grades: GradeEntry[];
+}
+
+export const GRADE_TABLE: GradeTier[] = [
+  { tier: 'I', tierName: 'INDEPENDENT and IDEAL', grades: [
+    { key: 'I', salary: '—' },
+  ]},
+  { tier: 'N', tierName: 'NO RULES and NEVER SAY NEVER', grades: [
+    { key: 'N',  salary: '1,170,000' },
+    { key: "N'", salary: '1,110,000' },
+    { key: 'n',  salary: '1,055,000' },
+    { key: "n'", salary: '1,000,000' },
+  ]},
+  { tier: 'S', tierName: 'STRATEGIC', grades: [
+    { key: 'S',  salary: '950,000' },
+    { key: "S'", salary: '900,000' },
+    { key: 's',  salary: '845,000' },
+    { key: "s'", salary: '800,000' },
+  ]},
+  { tier: 'T', tierName: 'TACTICAL', grades: [
+    { key: 'T',  salary: '740,000' },
+    { key: "T'", salary: '700,000' },
+    { key: 't',  salary: '650,000' },
+    { key: "t'", salary: '600,000' },
+  ]},
+  { tier: 'Y', tierName: 'YEARNING', grades: [
+    { key: 'Y',  salary: '580,000' },
+    { key: "Y'", salary: '550,000' },
+    { key: 'y',  salary: '525,000' },
+    { key: "y'", salary: '500,000' },
+  ]},
+  { tier: 'L', tierName: 'LOYALTY', grades: [
+    { key: 'L',  salary: '475,000' },
+    { key: "L'", salary: '450,000' },
+    { key: 'l',  salary: '420,000' },
+    { key: "l'", salary: '400,000' },
+  ]},
+  { tier: 'E', tierName: 'ENTRY', grades: [
+    { key: 'E',  salary: '385,000' },
+    { key: "E'", salary: '370,000' },
+    { key: 'e',  salary: '350,000' },
+    { key: "e'", salary: '330,000' },
+  ]},
+];
+
+export const GRADE_OPTIONS: { value: Grade; label: string }[] = GRADE_TABLE.flatMap(tier =>
+  tier.grades
+    .filter(g => g.key !== 'I')
+    .map(g => ({
+      value: g.key,
+      label: `${g.key}  (${g.salary}円/月)`,
+    }))
+);
+
+const emptyKpiNum = (): KpiNumRow => ({ prev: '', target: '', actual: '', nextTarget: '' });
+const emptyDeptKpiNum = (): DeptKpiNumRow => ({ label: '', prev: '', target: '', actual: '', nextTarget: '' });
+const emptyDeptKgi = (): DeptKgiRow => ({ mission: '', kgi: '' });
+
+export const CURRENT_PERIOD = '2026.10〜2027.3';
+
+export function createDefaultFormData(): FormData {
+  return {
+    cover: { company: '', name: '', grade: '', period: CURRENT_PERIOD },
+    company: {
+      revenue: emptyKpiNum(),
+      operatingProfit: emptyKpiNum(),
+      operatingMargin: emptyKpiNum(),
+      grossProfit: emptyKpiNum(),
+      strategicFocus: '',
+    },
+    dept: {
+      strategicFocusRef: '',
+      mission: '',
+      kgi1: emptyDeptKgi(),
+      kgi2: emptyDeptKgi(),
+      kpi1: emptyDeptKpiNum(),
+      kpi2: emptyDeptKpiNum(),
+      kpi3: emptyDeptKpiNum(),
+      kpi4: emptyDeptKpiNum(),
+      kpi5: emptyDeptKpiNum(),
+      actions: Array(4).fill(null).map(() => ({ content: '', expectedEffect: '', deadline: '' })),
+    },
+    personal: {
+      currentStatus: [
+        { label: '前回面談で指摘された課題', value: '' },
+        { label: 'それを受けてどう行動したか', value: '' },
+        { label: '今期の役割・期待（自己認識）', value: '' },
+      ],
+      smartGoals: Array(3).fill(null).map(() => ({ goal: '', targetValue: '', deadline: '', note: '' })),
+      kpiContribs: Array(3).fill(null).map(() => ({ deptKpi: '', myPart: '' })),
+    },
+    promotion: {
+      valueScore: '',
+      tenurePoint: 0,
+      deptGrowthPoint: 1,
+      personalKpiPoint: 1,
+      supervisorPoint: 1,
+      mgmtPoint: 1,
+      nurturingPoint: 1,
+    },
+    bonus: {
+      canAfford: 0,
+      hasProfit: 0,
+      futureProfit: 0,
+      deptKpiAchieved: 0,
+      personalKpiAchieved: 0,
+      supervisorEval: 0,
+      noSupervisor: false,
+      valueEval: 0,
+      reproducibility: 0,
+      roleAchievement: 0,
+      difficulty: 0,
+      mgmtEval: 0,
+    },
+    gradeExpectations: {},
+  };
+}
