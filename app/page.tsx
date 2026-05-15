@@ -25,6 +25,7 @@ export default function Home() {
         return {
           ...parsed,
           cover: { ...def.cover, ...parsed.cover, period: CURRENT_PERIOD },
+          group: { ...def.group, ...(parsed.group ?? {}) },
           dept: {
             ...def.dept,
             ...parsed.dept,
@@ -83,10 +84,11 @@ export default function Home() {
   };
 
   const navigate = (s: number) => {
-    if (s >= 1 && s <= 8) setStep(s);
+    if (s >= 1 && s <= 9) setStep(s);
   };
 
   const updateCover = (d: FormData['cover']) => setFormData(prev => ({ ...prev, cover: d }));
+  const updateGroup = (d: FormData['group']) => setFormData(prev => ({ ...prev, group: d }));
   const updateCompany = (d: FormData['company']) => setFormData(prev => ({ ...prev, company: d }));
   const updateDept = (d: FormData['dept']) => setFormData(prev => ({ ...prev, dept: d }));
   const updatePersonal = (d: FormData['personal']) => setFormData(prev => ({ ...prev, personal: d }));
@@ -201,13 +203,14 @@ export default function Home() {
           {/* Form card */}
           <div className="glass-panel" style={{ marginBottom: 24 }}>
             {step === 1 && <CoverForm data={formData.cover} onChange={updateCover} />}
-            {step === 2 && <CompanyGoalForm data={formData.company} onChange={updateCompany} />}
-            {step === 3 && <DeptGoalForm data={formData.dept} onChange={updateDept} />}
-            {step === 4 && <PersonalGoalForm data={formData.personal} onChange={updatePersonal} />}
-            {step === 5 && <GradeForm selectedGrade={formData.cover.grade} expectations={formData.gradeExpectations} onChange={updateGradeExpectations} />}
-            {step === 6 && <PromotionForm data={formData.promotion} onChange={updatePromotion} />}
-            {step === 7 && <BonusForm data={formData.bonus} onChange={updateBonus} />}
-            {step === 8 && <ConfirmView data={formData} />}
+            {step === 2 && <CompanyGoalForm data={formData.group} onChange={updateGroup} title="01｜グループ目標 記入シート" labelPrefix="グループ" />}
+            {step === 3 && <CompanyGoalForm data={formData.company} onChange={updateCompany} title="02｜会社目標 記入シート" labelPrefix="会社" />}
+            {step === 4 && <DeptGoalForm data={formData.dept} onChange={updateDept} />}
+            {step === 5 && <PersonalGoalForm data={formData.personal} onChange={updatePersonal} />}
+            {step === 6 && <GradeForm selectedGrade={formData.cover.grade} expectations={formData.gradeExpectations} onChange={updateGradeExpectations} />}
+            {step === 7 && <PromotionForm data={formData.promotion} onChange={updatePromotion} />}
+            {step === 8 && <BonusForm data={formData.bonus} onChange={updateBonus} />}
+            {step === 9 && <ConfirmView data={formData} />}
           </div>
 
           {/* Navigation buttons */}
@@ -220,7 +223,7 @@ export default function Home() {
               ← 前へ
             </button>
 
-            {step < 8 ? (
+            {step < 9 ? (
               <button
                 className="btn btn-primary"
                 onClick={() => navigate(step + 1)}
@@ -238,7 +241,7 @@ export default function Home() {
             )}
           </div>
 
-          {generated && step === 8 && (
+          {generated && step === 9 && (
             <div style={{
               marginTop: 20,
               padding: '14px 20px',
@@ -327,7 +330,7 @@ function ConfirmView({ data }: { data: FormData }) {
       }}>
         <strong style={{ color: 'var(--color-text)' }}>出力されるスライド：</strong>
         <br />
-        1. カバー &nbsp; 2. 会社目標 &nbsp; 3. 部署目標 &nbsp; 4. 個人目標 &nbsp; 5. グレード表 &nbsp; 6. 昇格・昇給採点 &nbsp; 7. ボーナス評価採点
+        1. カバー &nbsp; 2. グループ目標 &nbsp; 3. 会社目標 &nbsp; 4. 部署目標 &nbsp; 5. 個人目標 &nbsp; 6. グレード表 &nbsp; 7. 昇格・昇給採点 &nbsp; 8. ボーナス評価採点
       </div>
     </div>
   );

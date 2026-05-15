@@ -4,6 +4,8 @@ import { CompanyGoalData, KpiNumRow } from '@/lib/types';
 interface Props {
   data: CompanyGoalData;
   onChange: (data: CompanyGoalData) => void;
+  title?: string;
+  labelPrefix?: string;
 }
 
 const toNumeric = (v: string) => {
@@ -121,7 +123,12 @@ function KpiNumTable({
   );
 }
 
-export default function CompanyGoalForm({ data, onChange }: Props) {
+export default function CompanyGoalForm({
+  data,
+  onChange,
+  title = '02｜会社目標 記入シート',
+  labelPrefix = '会社',
+}: Props) {
   const set = <K extends keyof CompanyGoalData>(key: K, value: CompanyGoalData[K]) =>
     onChange({ ...data, [key]: value });
 
@@ -156,14 +163,14 @@ export default function CompanyGoalForm({ data, onChange }: Props) {
   };
 
   const profitRows = [
-    { label: '会社営業利益', rowKey: 'operatingProfit' as const, readOnlyNumeric: false },
-    { label: '会社営業利益率', rowKey: 'operatingMargin' as const, readOnlyNumeric: true },
-    { label: '会社粗利益', rowKey: 'grossProfit' as const, readOnlyNumeric: false },
+    { label: `${labelPrefix}営業利益`, rowKey: 'operatingProfit' as const, readOnlyNumeric: false },
+    { label: `${labelPrefix}営業利益率`, rowKey: 'operatingMargin' as const, readOnlyNumeric: true },
+    { label: `${labelPrefix}粗利益`, rowKey: 'grossProfit' as const, readOnlyNumeric: false },
   ];
 
   return (
     <div>
-      <p className="section-title">01｜会社目標 記入シート</p>
+      <p className="section-title">{title}</p>
 
       <p style={{ fontSize: '.8125rem', fontWeight: 600, marginBottom: 12 }}>① 戦略的フォーカス</p>
       <textarea
@@ -176,7 +183,7 @@ export default function CompanyGoalForm({ data, onChange }: Props) {
 
       <p style={{ fontSize: '.8125rem', fontWeight: 600, marginBottom: 12 }}>② 売上</p>
       <KpiNumTable
-        rows={[{ label: '会社売上合計', data: data.revenue }]}
+        rows={[{ label: `${labelPrefix}売上合計`, data: data.revenue }]}
         onUpdate={(_i, field, value) => updateRevenue(field, value)}
       />
 

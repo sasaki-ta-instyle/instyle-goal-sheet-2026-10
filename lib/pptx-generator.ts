@@ -121,7 +121,7 @@ function slide1(prs: InstanceType<typeof pptxgen>, d: FormData) {
     align: 'left',
   });
 
-  sl.addText('会社目標 ／ 部署目標 ／ 個人目標 ／ グレード表 ／ 昇格・昇給 ／ ボーナス評価', {
+  sl.addText('グループ目標 ／ 会社目標 ／ 部署目標 ／ 個人目標 ／ グレード表 ／ 昇格・昇給 ／ ボーナス評価', {
     x: 0.5, y: 2.2, w: W - 1, h: 0.4,
     fontFace: FONT, fontSize: 9, color: 'A0A098', bold: false,
     align: 'left',
@@ -151,14 +151,14 @@ function slide1(prs: InstanceType<typeof pptxgen>, d: FormData) {
   });
 }
 
-// スライド2: 会社目標
-function slide2(prs: InstanceType<typeof pptxgen>, d: FormData) {
+// スライド2/3: グループ目標 / 会社目標（同じレイアウト・ラベルだけ差し替え）
+function slideGoal(prs: InstanceType<typeof pptxgen>, d: FormData['company'], header: string, sub: string, prefix: string) {
   const sl = prs.addSlide();
   sl.background = { color: C.bg };
 
-  addSlideHeader(sl, '01｜会社目標 記入シート', 'INSTYLE GROUP｜人事制度　2 / 7');
+  addSlideHeader(sl, header, sub);
 
-  const c = d.company;
+  const c = d;
   let y = 1.05;
 
   const NUM_COLS = ['前期実績（円）\n2026.4〜9', '今期目標（円）\n2026.10〜2027.3', '今期実績（円）\n2026.10〜2027.3', '成長率(%)', '来期目標'];
@@ -173,7 +173,7 @@ function slide2(prs: InstanceType<typeof pptxgen>, d: FormData) {
   addSectionLabel(sl, y, '② 売上');
   y += 0.3;
   addTable(sl, y, ['指標', ...NUM_COLS], [
-    ['会社売上合計', c.revenue.prev || '—', c.revenue.target || '—', c.revenue.actual || '—', calcGrowth(c.revenue.prev, c.revenue.actual), c.revenue.nextTarget || '—'],
+    [`${prefix}売上合計`, c.revenue.prev || '—', c.revenue.target || '—', c.revenue.actual || '—', calcGrowth(c.revenue.prev, c.revenue.actual), c.revenue.nextTarget || '—'],
   ], [2.2, 1.5, 1.5, 1.5, 1.0, 2.0]);
   y += 0.3 + 0.28;
 
@@ -181,9 +181,9 @@ function slide2(prs: InstanceType<typeof pptxgen>, d: FormData) {
   addSectionLabel(sl, y, '③ 利益');
   y += 0.3;
   addTable(sl, y, ['指標', ...NUM_COLS], [
-    ['会社営業利益', c.operatingProfit.prev || '—', c.operatingProfit.target || '—', c.operatingProfit.actual || '—', calcGrowth(c.operatingProfit.prev, c.operatingProfit.actual), c.operatingProfit.nextTarget || '—'],
-    ['会社営業利益率', c.operatingMargin.prev || '—', c.operatingMargin.target || '—', c.operatingMargin.actual || '—', calcGrowth(c.operatingMargin.prev, c.operatingMargin.actual), c.operatingMargin.nextTarget || '—'],
-    ['会社粗利益', c.grossProfit.prev || '—', c.grossProfit.target || '—', c.grossProfit.actual || '—', calcGrowth(c.grossProfit.prev, c.grossProfit.actual), c.grossProfit.nextTarget || '—'],
+    [`${prefix}営業利益`, c.operatingProfit.prev || '—', c.operatingProfit.target || '—', c.operatingProfit.actual || '—', calcGrowth(c.operatingProfit.prev, c.operatingProfit.actual), c.operatingProfit.nextTarget || '—'],
+    [`${prefix}営業利益率`, c.operatingMargin.prev || '—', c.operatingMargin.target || '—', c.operatingMargin.actual || '—', calcGrowth(c.operatingMargin.prev, c.operatingMargin.actual), c.operatingMargin.nextTarget || '—'],
+    [`${prefix}粗利益`, c.grossProfit.prev || '—', c.grossProfit.target || '—', c.grossProfit.actual || '—', calcGrowth(c.grossProfit.prev, c.grossProfit.actual), c.grossProfit.nextTarget || '—'],
   ], [2.2, 1.5, 1.5, 1.5, 1.0, 2.0]);
   y += 0.3 + 0.28 * 3;
 }
@@ -193,7 +193,7 @@ function slide3(prs: InstanceType<typeof pptxgen>, d: FormData) {
   const sl = prs.addSlide();
   sl.background = { color: C.bg };
 
-  addSlideHeader(sl, '02｜部署目標 記入シート', 'INSTYLE GROUP｜人事制度　3 / 7');
+  addSlideHeader(sl, '03｜部署目標 記入シート', 'INSTYLE GROUP｜人事制度　4 / 8');
 
   const c = d.dept;
   let y = 1.05;
@@ -248,7 +248,7 @@ function slide4(prs: InstanceType<typeof pptxgen>, d: FormData) {
   const sl = prs.addSlide();
   sl.background = { color: C.bg };
 
-  addSlideHeader(sl, '03｜個人目標 記入シート', 'INSTYLE GROUP｜人事制度　4 / 7');
+  addSlideHeader(sl, '04｜個人目標 記入シート', 'INSTYLE GROUP｜人事制度　5 / 8');
 
   const c = d.personal;
   let y = 1.05;
@@ -282,7 +282,7 @@ function slide5(prs: InstanceType<typeof pptxgen>, selectedGrade: string, expect
   const sl = prs.addSlide();
   sl.background = { color: C.bg };
 
-  addSlideHeader(sl, '04｜グレード表', 'INSTYLE GROUP｜人事制度　5 / 7');
+  addSlideHeader(sl, '05｜グレード表', 'INSTYLE GROUP｜人事制度　6 / 8');
 
   const x0 = 0.4;
   const y = 1.1;
@@ -402,7 +402,7 @@ function slide6(prs: InstanceType<typeof pptxgen>, d: FormData) {
   const sl = prs.addSlide();
   sl.background = { color: C.bg };
 
-  addSlideHeader(sl, '05｜昇格・昇給 採点シート', 'INSTYLE GROUP｜人事制度　6 / 7');
+  addSlideHeader(sl, '06｜昇格・昇給 採点シート', 'INSTYLE GROUP｜人事制度　7 / 8');
 
   const p = d.promotion;
   let y = 1.05;
@@ -483,7 +483,7 @@ function slide7(prs: InstanceType<typeof pptxgen>, d: FormData) {
   const sl = prs.addSlide();
   sl.background = { color: C.bg };
 
-  addSlideHeader(sl, '06｜ボーナス評価 採点シート', 'INSTYLE GROUP｜人事制度　7 / 7');
+  addSlideHeader(sl, '07｜ボーナス評価 採点シート', 'INSTYLE GROUP｜人事制度　8 / 8');
 
   const b = d.bonus;
   let y = 1.05;
@@ -549,7 +549,8 @@ export async function generatePptx(data: FormData) {
   prs.subject = '目標設定シート';
 
   slide1(prs, data);
-  slide2(prs, data);
+  slideGoal(prs, data.group, '01｜グループ目標 記入シート', 'INSTYLE GROUP｜人事制度　2 / 8', 'グループ');
+  slideGoal(prs, data.company, '02｜会社目標 記入シート', 'INSTYLE GROUP｜人事制度　3 / 8', '会社');
   slide3(prs, data);
   slide4(prs, data);
   slide5(prs, data.cover.grade, data.gradeExpectations as Record<string, string>);

@@ -106,6 +106,7 @@ export type GradeExpectations = Partial<Record<string, string>>;
 
 export interface FormData {
   cover: CoverData;
+  group: CompanyGoalData;
   company: CompanyGoalData;
   dept: DeptGoalData;
   personal: PersonalGoalData;
@@ -185,6 +186,13 @@ export const CURRENT_PERIOD = '2026.10〜2027.3';
 export function createDefaultFormData(): FormData {
   return {
     cover: { company: '', name: '', grade: '', period: CURRENT_PERIOD },
+    group: {
+      revenue: emptyKpiNum(),
+      operatingProfit: emptyKpiNum(),
+      operatingMargin: emptyKpiNum(),
+      grossProfit: emptyKpiNum(),
+      strategicFocus: '',
+    },
     company: {
       revenue: emptyKpiNum(),
       operatingProfit: emptyKpiNum(),
