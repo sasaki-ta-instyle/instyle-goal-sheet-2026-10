@@ -13,31 +13,39 @@ import { createDefaultFormData, CURRENT_PERIOD, FormData } from '@/lib/types';
 
 const STORAGE_KEY = 'instyle-goal-sheet-2026-10-v1';
 
+// 旧バージョンの JSON / localStorage を読み込んだ場合に新フィールドが undefined になり
+// 下流のレンダリングや PPTX 生成が落ちるのを防ぐ正規化ヘルパ。
+// cover.period は常に当期に強制する（4月版エクスポートを 10月版にインポートしたケース対応）。
+function mergeFormData(parsed: unknown): FormData {
+  const def = createDefaultFormData();
+  if (!parsed || typeof parsed !== 'object') return def;
+  const p = parsed as Partial<FormData>;
+  return {
+    ...def,
+    ...p,
+    cover: { ...def.cover, ...(p.cover ?? {}), period: CURRENT_PERIOD },
+    group: { ...def.group, ...(p.group ?? {}) },
+    company: { ...def.company, ...(p.company ?? {}) },
+    dept: {
+      ...def.dept,
+      ...(p.dept ?? {}),
+      kgi1: { ...def.dept.kgi1, ...(p.dept?.kgi1 ?? {}) },
+      kgi2: { ...def.dept.kgi2, ...(p.dept?.kgi2 ?? {}) },
+    },
+    personal: { ...def.personal, ...(p.personal ?? {}) },
+    promotion: { ...def.promotion, ...(p.promotion ?? {}) },
+    bonus: { ...def.bonus, ...(p.bonus ?? {}) },
+    gradeExpectations: { ...def.gradeExpectations, ...(p.gradeExpectations ?? {}) },
+  };
+}
+
 export default function Home() {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState<FormData>(() => {
     if (typeof window === 'undefined') return createDefaultFormData();
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        const parsed = JSON.parse(saved) as FormData;
-        const def = createDefaultFormData();
-        return {
-          ...parsed,
-          cover: { ...def.cover, ...parsed.cover, period: CURRENT_PERIOD },
-          group: { ...def.group, ...(parsed.group ?? {}) },
-          dept: {
-            ...def.dept,
-            ...parsed.dept,
-            kgi1: { ...def.dept.kgi1, ...(parsed.dept?.kgi1 ?? {}) },
-            kgi2: { ...def.dept.kgi2, ...(parsed.dept?.kgi2 ?? {}) },
-          },
-          personal: {
-            ...def.personal,
-            ...parsed.personal,
-          },
-        };
-      }
+      if (saved) return mergeFormData(JSON.parse(saved));
     } catch {}
     return createDefaultFormData();
   });
@@ -75,8 +83,8 @@ export default function Home() {
     const reader = new FileReader();
     reader.onload = () => {
       try {
-        const parsed = JSON.parse(reader.result as string) as FormData;
-        setFormData(parsed);
+        const parsed = JSON.parse(reader.result as string);
+        setFormData(mergeFormData(parsed));
         setStep(1);
         setGenerated(false);
       } catch {
