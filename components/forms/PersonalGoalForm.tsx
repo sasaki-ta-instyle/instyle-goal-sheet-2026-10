@@ -72,7 +72,23 @@ export default function PersonalGoalForm({ data, onChange }: Props) {
         </table>
       </div>
 
-      <p style={{ fontSize: '.8125rem', fontWeight: 600, marginBottom: 12 }}>② SMART個人目標</p>
+      <p style={{ fontSize: '.8125rem', fontWeight: 600, marginBottom: 12, display: 'flex', alignItems: 'baseline', gap: 12 }}>
+        <span>② SMART個人目標</span>
+        <a
+          href="https://www.dodadsj.com/content/20240206_smart/"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            fontSize: '.6875rem',
+            fontWeight: 400,
+            color: 'var(--color-text-muted)',
+            textDecoration: 'underline',
+            textUnderlineOffset: 2,
+          }}
+        >
+          SMARTの法則とは ↗
+        </a>
+      </p>
       <div className="table-wrap" style={{ marginBottom: 24 }}>
         <table className="data-table">
           <thead>
