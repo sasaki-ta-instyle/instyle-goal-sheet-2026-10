@@ -1,5 +1,12 @@
 'use client';
-import { PersonalGoalData, SmartGoalRow, KpiContribRow } from '@/lib/types';
+import { PersonalGoalData, SmartGoalRow, KpiContribRow, SlLevel } from '@/lib/types';
+
+const SL_OPTIONS: { value: SlLevel; title: string; desc: string }[] = [
+  { value: 'S1', title: 'S1｜指示型', desc: '高指示・低支援。何を・いつまでに・どうやるかを具体的に指示してもらう段階。' },
+  { value: 'S2', title: 'S2｜コーチ型', desc: '高指示・高支援。指示を受けつつ理由や背景も共有し、納得して進める段階。' },
+  { value: 'S3', title: 'S3｜支援型', desc: '低指示・高支援。やり方は任され、判断に迷うときに上長が支援する段階。' },
+  { value: 'S4', title: 'S4｜委任型', desc: '低指示・低支援。目的だけ共有して、進め方も意思決定も自分で完結させる段階。' },
+];
 
 interface Props {
   data: PersonalGoalData;
@@ -42,7 +49,7 @@ export default function PersonalGoalForm({ data, onChange }: Props) {
 
   return (
     <div>
-      <p className="section-title">03｜個人目標 記入シート</p>
+      <p className="section-title">04｜個人目標 記入シート</p>
 
       <p style={{ fontSize: '.8125rem', fontWeight: 600, marginBottom: 12 }}>① 現在地の確認</p>
       <div className="table-wrap" style={{ marginBottom: 24 }}>
@@ -113,7 +120,7 @@ export default function PersonalGoalForm({ data, onChange }: Props) {
       </div>
 
       <p style={{ fontSize: '.8125rem', fontWeight: 600, marginBottom: 12 }}>③ 部署KPIへの貢献（自分が担う数字）</p>
-      <div className="table-wrap">
+      <div className="table-wrap" style={{ marginBottom: 24 }}>
         <table className="data-table">
           <thead>
             <tr>
@@ -131,6 +138,81 @@ export default function PersonalGoalForm({ data, onChange }: Props) {
           </tbody>
         </table>
       </div>
+
+      <p style={{ fontSize: '.8125rem', fontWeight: 600, marginBottom: 6 }}>④ SL理論（Situational Leadership）</p>
+      <p style={{ fontSize: '.75rem', color: 'var(--color-text-muted)', marginBottom: 12 }}>
+        今期の自分が S1〜S4 のどこに属するかを<strong>上長と握って</strong>選択してください。期中の関わり方（指示／支援の量）の認識を揃えるためのものです。
+      </p>
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(2, 1fr)',
+          gap: 10,
+          marginBottom: 12,
+        }}
+      >
+        {SL_OPTIONS.map(opt => {
+          const selected = data.slLevel === opt.value;
+          return (
+            <label
+              key={opt.value}
+              style={{
+                display: 'flex',
+                gap: 10,
+                padding: '12px 14px',
+                borderRadius: 'var(--r)',
+                background: selected ? 'rgba(255,255,255,.85)' : 'var(--glass-tinted)',
+                boxShadow: selected
+                  ? 'inset 0 1px 0 rgba(255,255,255,.95), 0 2px 8px rgba(53,54,45,.10)'
+                  : 'none',
+                cursor: 'pointer',
+                transition: 'all 200ms cubic-bezier(.4,0,.2,1)',
+              }}
+            >
+              <input
+                type="radio"
+                name="slLevel"
+                value={opt.value}
+                checked={selected}
+                onChange={() => set('slLevel', opt.value)}
+                style={{ marginTop: 3 }}
+              />
+              <span style={{ display: 'block' }}>
+                <span
+                  style={{
+                    display: 'block',
+                    fontSize: '.8125rem',
+                    fontWeight: 600,
+                    color: selected ? 'var(--color-text)' : 'var(--color-text-muted)',
+                    marginBottom: 4,
+                  }}
+                >
+                  {opt.title}
+                </span>
+                <span style={{ fontSize: '.6875rem', color: 'var(--color-text-muted)', lineHeight: 1.55 }}>
+                  {opt.desc}
+                </span>
+              </span>
+            </label>
+          );
+        })}
+      </div>
+      <textarea
+        className="input"
+        style={{ width: '100%', minHeight: 64, resize: 'vertical', padding: '8px 10px', fontSize: '.8125rem', marginBottom: 24 }}
+        placeholder="上長と握った内容・理由・期中の関わり方の希望など（任意）"
+        value={data.slNote}
+        onChange={e => set('slNote', e.target.value)}
+      />
+
+      <p style={{ fontSize: '.8125rem', fontWeight: 600, marginBottom: 12 }}>⑤ 上長からの一言</p>
+      <textarea
+        className="input"
+        style={{ width: '100%', minHeight: 96, resize: 'vertical', padding: '8px 10px', fontSize: '.8125rem' }}
+        placeholder="上長が記入。期初の期待・SL の合意・コメントなど"
+        value={data.supervisorComment}
+        onChange={e => set('supervisorComment', e.target.value)}
+      />
     </div>
   );
 }

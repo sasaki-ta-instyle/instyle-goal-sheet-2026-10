@@ -4,6 +4,7 @@ import { DeptGoalData, DeptKpiNumRow, DeptKgiRow, DeptActionRow } from '@/lib/ty
 interface Props {
   data: DeptGoalData;
   onChange: (data: DeptGoalData) => void;
+  companyStrategicFocus: string;
 }
 
 const autoComma = (v: string) => {
@@ -42,7 +43,7 @@ const KPI_COLS: { key: keyof DeptKpiNumRow; label: string; sub: string; autoNumb
   { key: 'actual', label: '今期実績', sub: '2026.10〜2027.3', autoNumber: true },
 ];
 
-export default function DeptGoalForm({ data, onChange }: Props) {
+export default function DeptGoalForm({ data, onChange, companyStrategicFocus }: Props) {
   const set = <K extends keyof DeptGoalData>(key: K, value: DeptGoalData[K]) =>
     onChange({ ...data, [key]: value });
 
@@ -72,19 +73,26 @@ export default function DeptGoalForm({ data, onChange }: Props) {
 
   return (
     <div>
-      <p className="section-title">02｜部署目標 記入シート</p>
+      <p className="section-title">03｜部署目標 記入シート</p>
 
       <p style={{ fontSize: '.8125rem', fontWeight: 600, marginBottom: 12 }}>① 上位目標との接続</p>
       <div className="form-grid-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 28 }}>
         <div>
-          <label className="form-label">戦略的フォーカス（会社目標から転記）</label>
-          <textarea
+          <label className="form-label">戦略的フォーカス（会社目標から自動転記）</label>
+          <div
             className="input"
-            style={{ minHeight: 72 }}
-            value={data.strategicFocusRef}
-            onChange={e => set('strategicFocusRef', e.target.value)}
-            placeholder="会社目標シートの戦略的フォーカスを転記"
-          />
+            style={{
+              minHeight: 72,
+              padding: '8px 10px',
+              fontSize: '.8125rem',
+              background: 'var(--glass-tinted)',
+              color: companyStrategicFocus ? 'var(--color-text-muted)' : 'var(--color-text-light)',
+              whiteSpace: 'pre-wrap',
+              cursor: 'default',
+            }}
+          >
+            {companyStrategicFocus || '会社目標シートで「戦略的フォーカス」を入力すると、ここに自動で表示されます。'}
+          </div>
         </div>
         <div>
           <label className="form-label">部署のミッション</label>

@@ -42,7 +42,6 @@ export interface DeptKgiRow {
 }
 
 export interface DeptGoalData {
-  strategicFocusRef: string;
   mission: string;
   kgi1: DeptKgiRow;
   kgi2: DeptKgiRow;
@@ -71,10 +70,15 @@ export interface KpiContribRow {
   myPart: string;
 }
 
+export type SlLevel = '' | 'S1' | 'S2' | 'S3' | 'S4';
+
 export interface PersonalGoalData {
   currentStatus: CurrentStatusRow[];
   smartGoals: SmartGoalRow[];
   kpiContribs: KpiContribRow[];
+  slLevel: SlLevel;
+  slNote: string;
+  supervisorComment: string;
 }
 
 export interface PromotionData {
@@ -201,7 +205,6 @@ export function createDefaultFormData(): FormData {
       strategicFocus: '',
     },
     dept: {
-      strategicFocusRef: '',
       mission: '',
       kgi1: emptyDeptKgi(),
       kgi2: emptyDeptKgi(),
@@ -220,6 +223,9 @@ export function createDefaultFormData(): FormData {
       ],
       smartGoals: Array(3).fill(null).map(() => ({ goal: '', targetValue: '', deadline: '', note: '' })),
       kpiContribs: Array(3).fill(null).map(() => ({ deptKpi: '', myPart: '' })),
+      slLevel: '',
+      slNote: '',
+      supervisorComment: '',
     },
     promotion: {
       valueScore: '',

@@ -199,10 +199,10 @@ function slide3(prs: InstanceType<typeof pptxgen>, d: FormData) {
   let y = 1.05;
 
   // ① 上位目標との接続
-  addSectionLabel(sl, y, '① 上位目標との接続（会社目標から転記）');
+  addSectionLabel(sl, y, '① 上位目標との接続（会社目標から自動転記）');
   y += 0.3;
   const halfW = (W - 0.8 - 0.16) / 2;
-  textBox(sl, 0.4, y, halfW, 0.55, '戦略的フォーカス：\n' + (c.strategicFocusRef || '—'));
+  textBox(sl, 0.4, y, halfW, 0.55, '戦略的フォーカス：\n' + (d.company.strategicFocus || '—'));
   textBox(sl, 0.4 + halfW + 0.16, y, halfW, 0.55, '部署のミッション：\n' + (c.mission || '—'));
   y += 0.65;
 
@@ -275,6 +275,27 @@ function slide4(prs: InstanceType<typeof pptxgen>, d: FormData) {
   y += 0.3;
   const kpiRows = c.kpiContribs.map(r => [r.deptKpi || '—', r.myPart || '—']);
   addTable(sl, y, ['部署KPI', '自分の担当分'], kpiRows, [6.0, W - 0.8 - 6.0]);
+  y += 0.3 + kpiRows.length * 0.3 + 0.15;
+
+  // ④ SL理論
+  addSectionLabel(sl, y, '④ SL理論（上長と合意した今期の関わり方）');
+  y += 0.3;
+  const SL_LABELS: Record<string, string> = {
+    S1: 'S1｜指示型（高指示・低支援）',
+    S2: 'S2｜コーチ型（高指示・高支援）',
+    S3: 'S3｜支援型（低指示・高支援）',
+    S4: 'S4｜委任型（低指示・低支援）',
+  };
+  const slText = c.slLevel ? SL_LABELS[c.slLevel] : '—';
+  const slBoxW = 3.6;
+  textBox(sl, 0.4, y, slBoxW, 0.4, slText, { bold: !!c.slLevel, fontSize: 9 });
+  textBox(sl, 0.4 + slBoxW + 0.16, y, W - 0.8 - slBoxW - 0.16, 0.4, c.slNote || '（上長との合意メモ未記入）');
+  y += 0.55;
+
+  // ⑤ 上長からの一言
+  addSectionLabel(sl, y, '⑤ 上長からの一言');
+  y += 0.3;
+  textBox(sl, 0.4, y, W - 0.8, 0.6, c.supervisorComment || '—');
 }
 
 // スライド5: グレード表

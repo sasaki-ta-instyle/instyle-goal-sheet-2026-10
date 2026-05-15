@@ -32,6 +32,10 @@ export default function Home() {
             kgi1: { ...def.dept.kgi1, ...(parsed.dept?.kgi1 ?? {}) },
             kgi2: { ...def.dept.kgi2, ...(parsed.dept?.kgi2 ?? {}) },
           },
+          personal: {
+            ...def.personal,
+            ...parsed.personal,
+          },
         };
       }
     } catch {}
@@ -205,7 +209,7 @@ export default function Home() {
             {step === 1 && <CoverForm data={formData.cover} onChange={updateCover} />}
             {step === 2 && <CompanyGoalForm data={formData.group} onChange={updateGroup} title="01｜グループ目標 記入シート" labelPrefix="グループ" />}
             {step === 3 && <CompanyGoalForm data={formData.company} onChange={updateCompany} title="02｜会社目標 記入シート" labelPrefix="会社" />}
-            {step === 4 && <DeptGoalForm data={formData.dept} onChange={updateDept} />}
+            {step === 4 && <DeptGoalForm data={formData.dept} onChange={updateDept} companyStrategicFocus={formData.company.strategicFocus} />}
             {step === 5 && <PersonalGoalForm data={formData.personal} onChange={updatePersonal} />}
             {step === 6 && <GradeForm selectedGrade={formData.cover.grade} expectations={formData.gradeExpectations} onChange={updateGradeExpectations} />}
             {step === 7 && <PromotionForm data={formData.promotion} onChange={updatePromotion} />}
